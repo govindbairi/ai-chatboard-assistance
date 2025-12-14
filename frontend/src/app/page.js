@@ -8,6 +8,12 @@ import { loadSlim } from "tsparticles-slim";
 import Spinner from "./Spinner";
 
 export default function Home() {
+  // ---------------------------------------------------------
+  // 1. DEFINE API_URL HERE (Top Level of Component)
+  // ---------------------------------------------------------
+  // This ensures it is available to handleUpload, handleSend, and anywhere else.
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isUploading, setIsUploading] = useState(false);
@@ -26,7 +32,6 @@ export default function Home() {
   const particlesInit = useCallback(async (engine) => {
     await loadSlim(engine); // Use loadSlim instead of loadFull
   }, []);
-
 
   const particlesLoaded = useCallback(async (container) => {
     // Optional: Add any logic to run after particles are loaded
@@ -95,8 +100,8 @@ export default function Home() {
         { sender: "user", text: `📄 Uploaded ${fileType} file: ${file.name}` },
       ]);
       try {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-const response = await fetch(`${API_URL}/upload`, {
+        // Use the dynamic API_URL
+        const response = await fetch(`${API_URL}/upload`, {
           method: "POST",
           body: formData,
         });
@@ -134,6 +139,7 @@ const response = await fetch(`${API_URL}/upload`, {
       { sender: "bot", text: "Thinking...", isLoading: true },
     ]);
     try {
+      // Use the dynamic API_URL
       const response = await fetch(`${API_URL}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
